@@ -37,19 +37,28 @@ export default () => {
 			previewVisible: true
 		});
 
-	const handleImgSubmit = async e => {
-		setImgState({
-			...imgState,
-			fileList: [...fileList, e.file]
-		});
+	const handleImgChange = e => {
+		setImgState({ ...imgState, fileList: e.fileList });
+	};
+
+	const handleImgSubmit = async () => {
 		const data = new FormData();
-		data.append("file", e.file);
+		console.log(imgState.fileList[0]);
+		data.append("file", imgState.fileList[0].originFileObj);
 		data.append("upload_preset", "ykospw2o");
 
 		const res = await axios.post(
 			"https://api.cloudinary.com/v1_1/dy5ptksj0/image/upload",
 			data
 		);
+
+		const { secure_url } = res.data;
+	};
+
+	const handleSubmit = values => {
+		console.log(values);
+		console.log(imgState.fileList);
+		handleImgSubmit();
 	};
 
 	const { previewVisible, previewImage, fileList } = imgState;
@@ -66,16 +75,16 @@ export default () => {
 				description: "",
 				keycaps: ""
 			}}
-			handleSubmit={values => console.log(values)}
+			onSubmit={handleSubmit}
 			render={({ handleSubmit, handleChange, values }) => (
 				<Form onSubmit={handleSubmit}>
 					<FormItem {...formItemLayout} label="Add an Image">
 						<Upload
-							action="https://api.cloudinary.com/v1_1/dy5ptksj0/image/upload"
+							action="//jsonplaceholder.typicode.com/posts/"
 							listType="picture-card"
 							fileList={fileList}
 							onPreview={handlePreview}
-							customRequest={handleImgSubmit}
+							onChange={handleImgChange}
 						>
 							{fileList.length >= 4 ? null : <UploadButton />}
 						</Upload>
