@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Formik } from "formik";
 import { Form, Input, Icon, Button, Upload, Modal } from "antd";
 import axios from "axios";
+import _ from "lodash";
 
 const FormItem = Form.Item;
 
@@ -20,7 +21,8 @@ export default () => {
 	const initialState = {
 		previewVisible: false,
 		previewImage: "",
-		fileList: []
+		fileList: [],
+		preventFire: false
 	};
 
 	const [imgState, setImgState] = useState(initialState);
@@ -35,11 +37,13 @@ export default () => {
 			previewVisible: true
 		});
 
-	const handleImgChange = async e => {
-		await setImgState({ ...imgState, fileList: e.fileList });
-
+	const handleImgSubmit = async e => {
+		setImgState({
+			...imgState,
+			fileList: [...fileList, e.file]
+		});
 		const data = new FormData();
-		data.append("file", e.file.originFileObj);
+		data.append("file", e.file);
 		data.append("upload_preset", "ykospw2o");
 
 		const res = await axios.post(
@@ -67,13 +71,13 @@ export default () => {
 				<Form onSubmit={handleSubmit}>
 					<FormItem {...formItemLayout} label="Add an Image">
 						<Upload
-							action="//jsonplaceholder.typicode.com/posts/"
+							action="https://api.cloudinary.com/v1_1/dy5ptksj0/image/upload"
 							listType="picture-card"
 							fileList={fileList}
 							onPreview={handlePreview}
-							onChange={handleImgChange}
+							customRequest={handleImgSubmit}
 						>
-							{fileList.length >= 3 ? null : <UploadButton />}
+							{fileList.length >= 4 ? null : <UploadButton />}
 						</Upload>
 						<Modal
 							visible={previewVisible}
