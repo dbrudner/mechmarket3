@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Formik } from "formik";
 import { Form, Input, Icon, Button, Upload, Modal } from "antd";
+import axios from "axios";
 
 const FormItem = Form.Item;
 
@@ -34,8 +35,17 @@ export default () => {
 			previewVisible: true
 		});
 
-	const handleImgChange = e => {
-		setImgState({ ...imgState, fileList: e.fileList });
+	const handleImgChange = async e => {
+		await setImgState({ ...imgState, fileList: e.fileList });
+
+		const data = new FormData();
+		data.append("file", e.file.originFileObj);
+		data.append("upload_preset", "ykospw2o");
+
+		const res = await axios.post(
+			"https://api.cloudinary.com/v1_1/dy5ptksj0/image/upload",
+			data
+		);
 	};
 
 	const { previewVisible, previewImage, fileList } = imgState;
