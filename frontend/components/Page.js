@@ -8,7 +8,15 @@ class Page extends Component {
 			<>
 				<Meta />
 				<Header />
-				<div style={{ maxWidth: "900px" }}>{this.props.children}</div>
+				<div
+					style={{
+						maxWidth: "900px",
+						margin: "auto",
+						padding: "30px"
+					}}
+				>
+					{this.props.children}
+				</div>
 			</>
 		);
 	}

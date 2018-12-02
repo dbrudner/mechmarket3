@@ -23,6 +23,7 @@
 		"downshift": "^2.2.3",
 		"enzyme": "^3.6.0",
 		"enzyme-adapter-react-16": "^1.5.0",
+		"formik": "^1.3.2",
 		"graphql": "^14.0.2",
 		"graphql-tag": "^2.9.2",
 		"lodash.debounce": "^4.0.8",
@@ -32,7 +33,7 @@
 		"react": "next",
 		"react-adopt": "^0.6.0",
 		"react-apollo": "^2.2.1",
-		"react-dom": "^16.5.2",
+		"react-dom": "next",
 		"react-stripe-checkout": "^2.6.3",
 		"react-transition-group": "^2.5.0",
 		"waait": "^1.0.2"
