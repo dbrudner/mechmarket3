@@ -2,16 +2,20 @@ type User {
 	id: ID! @unique
 	name: String!
 	email: String!
+	# keyboards: [Keyboard]
 }
 
-type Item {
+type Keyboard {
 	id: ID! @unique
-	title: String!
-	description: String!
-	image: String
-	largeImage: String
+	name: String!
+	switches: String!
+	size: String!
+	image: [String]
+	layout: String
 	price: Int!
-	createdAt: DateTime!
-	updatedAt: DateTime!
-	# user: User
+	description: String
+	keycaps: String
+	# createAt: DateTime!
+	# updatedAt: DateTime!
+	# user: User!
 }

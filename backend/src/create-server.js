@@ -1,5 +1,5 @@
 const { GraphQLServer } = require("graphql-yoga");
-// const {resolovers} = require("graphql");
+// const {resolvers} = require("graphql");
 const Mutation = require("./resolvers/Mutation");
 const Query = require("./resolvers/Query");
 const db = require("./db");

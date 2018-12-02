@@ -1,15 +1,18 @@
 # import * from './generated/prisma.graphql'
 
 type Mutation {
-	createItem(
-		title: String
-		description: String
-		price: Int
-		image: String
-		largeImage: String
-	): Item!
+	createKeyboard(
+		name: String!
+		switches: String!
+		size: String!
+		image: [String]
+		layout: String
+		price: Int!
+		description: String!
+		keycaps: String
+	): Keyboard!
 }
 
 type Query {
-	Items: [Item]!
+	keyboards: [Keyboard]!
 }

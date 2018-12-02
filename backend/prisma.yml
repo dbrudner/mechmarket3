@@ -1,6 +1,6 @@
-endpoint: ${env:PRISMA_ENDPOINT}
+endpoint: https://us1.prisma.sh/dave-brudner/mechmarket/dev
 datamodel: datamodel.prisma
-# secret: ${env:PRISMA_SECRET}
+disableAuth: true
 hooks:
     post-deploy:
         - graphql get-schema -p prisma

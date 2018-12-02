@@ -1,11 +1,20 @@
-const mutations = {
-	async createItem(parent, args, tx, info) {
-		const item = await ctx.db.mutation.createItem(
-			{ data: { ...args } },
+const Mutations = {
+	async createKeyboard(parent, args, ctx, info) {
+		// TODO: Check if they are logged in
+
+		const keyboard = await ctx.db.mutation.createKeyboard(
+			{
+				data: {
+					...args
+				}
+			},
 			info
 		);
-		return item;
+
+		console.log(keyboard);
+
+		return keyboard;
 	}
 };
 
-module.exports = mutations;
+module.exports = Mutations;
