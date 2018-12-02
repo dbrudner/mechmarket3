@@ -5,7 +5,7 @@ type Mutation {
 		name: String!
 		switches: String!
 		size: String!
-		image: [String]
+		image: String
 		layout: String
 		price: Int!
 		description: String!

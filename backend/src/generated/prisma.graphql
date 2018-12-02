@@ -1,5 +1,5 @@
 # source: https://us1.prisma.sh/dave-brudner/mechmarket/dev
-# timestamp: Sat Dec 01 2018 22:44:28 GMT-0600 (Central Standard Time)
+# timestamp: Sun Dec 02 2018 14:25:16 GMT-0600 (Central Standard Time)
 
 type AggregateKeyboard {
   count: Int!
@@ -19,7 +19,7 @@ type Keyboard implements Node {
   name: String!
   switches: String!
   size: String!
-  image: [String!]!
+  image: String
   layout: String
   price: Int!
   description: String
@@ -36,19 +36,15 @@ type KeyboardConnection {
   aggregate: AggregateKeyboard!
 }
 
-input KeyboardCreateimageInput {
-  set: [String!]
-}
-
 input KeyboardCreateInput {
   name: String!
   switches: String!
   size: String!
+  image: String
   layout: String
   price: Int!
   description: String
   keycaps: String
-  image: KeyboardCreateimageInput
 }
 
 """An edge in a connection."""
@@ -69,6 +65,8 @@ enum KeyboardOrderByInput {
   switches_DESC
   size_ASC
   size_DESC
+  image_ASC
+  image_DESC
   layout_ASC
   layout_DESC
   price_ASC
@@ -88,7 +86,7 @@ type KeyboardPreviousValues {
   name: String!
   switches: String!
   size: String!
-  image: [String!]!
+  image: String
   layout: String
   price: Int!
   description: String
@@ -134,30 +132,26 @@ input KeyboardSubscriptionWhereInput {
   node: KeyboardWhereInput
 }
 
-input KeyboardUpdateimageInput {
-  set: [String!]
-}
-
 input KeyboardUpdateInput {
   name: String
   switches: String
   size: String
+  image: String
   layout: String
   price: Int
   description: String
   keycaps: String
-  image: KeyboardUpdateimageInput
 }
 
 input KeyboardUpdateManyMutationInput {
   name: String
   switches: String
   size: String
+  image: String
   layout: String
   price: Int
   description: String
   keycaps: String
-  image: KeyboardUpdateimageInput
 }
 
 input KeyboardWhereInput {
@@ -329,6 +323,46 @@ input KeyboardWhereInput {
 
   """All values not ending with the given string."""
   size_not_ends_with: String
+  image: String
+
+  """All values that are not equal to given value."""
+  image_not: String
+
+  """All values that are contained in given list."""
+  image_in: [String!]
+
+  """All values that are not contained in given list."""
+  image_not_in: [String!]
+
+  """All values less than the given value."""
+  image_lt: String
+
+  """All values less than or equal the given value."""
+  image_lte: String
+
+  """All values greater than the given value."""
+  image_gt: String
+
+  """All values greater than or equal the given value."""
+  image_gte: String
+
+  """All values containing the given string."""
+  image_contains: String
+
+  """All values not containing the given string."""
+  image_not_contains: String
+
+  """All values starting with the given string."""
+  image_starts_with: String
+
+  """All values not starting with the given string."""
+  image_not_starts_with: String
+
+  """All values ending with the given string."""
+  image_ends_with: String
+
+  """All values not ending with the given string."""
+  image_not_ends_with: String
   layout: String
 
   """All values that are not equal to given value."""

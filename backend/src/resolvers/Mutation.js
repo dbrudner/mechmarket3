@@ -11,8 +11,6 @@ const Mutations = {
 			info
 		);
 
-		console.log(keyboard);
-
 		return keyboard;
 	}
 };
