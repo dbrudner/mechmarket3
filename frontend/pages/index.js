@@ -1,12 +1,39 @@
-import React from "react";
-import Link from "next/link";
+import React, { Component } from "react";
+import { Query } from "react-apollo";
+import gql from "graphql-tag";
+import Keyboard from "../components/Keyboard";
 
-const Home = () => (
-	<div>
-		<Link href="/sell">
-			<a>Keyboards</a>
-		</Link>
-	</div>
+const ALL_KEYBOARDS_QUERY = gql`
+	query ALL_KEYBOARDS_QUERY {
+		keyboards {
+			image
+			name
+			switches
+			size
+			layout
+			price
+			description
+			keycaps
+			id
+		}
+	}
+`;
+
+const Items = () => (
+	<Query query={ALL_KEYBOARDS_QUERY}>
+		{({ data, error, loading }) => {
+			if (loading) return <p>Loading...</p>;
+			if (error) return <p>Error: {error.message}</p>;
+			console.log(data);
+			return (
+				<div>
+					{data.keyboards.map(keyboard => (
+						<Keyboard keyboard={keyboard} key={keyboard.id} />
+					))}
+				</div>
+			);
+		}}
+	</Query>
 );
 
-export default Home;
+export default Items;

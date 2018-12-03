@@ -121,101 +121,96 @@ export default () => {
 					}}
 				>
 					{(createKeyboard, { loading, error }) => (
-						<fieldset disabled={loading} aria-busy={loading}>
-							<Form
-								onSubmit={async e => {
-									e.preventDefault();
-									const res = await createKeyboard();
-									Router.push({
-										pathname: "/keyboard",
-										query: {
-											id: res.data.createKeyboard.id
-										}
-									});
-								}}
-							>
-								<FormItem
-									{...formItemLayout}
-									label="Add an Image"
+						<Form
+							onSubmit={async e => {
+								e.preventDefault();
+								const res = await createKeyboard();
+								Router.push({
+									pathname: "/keyboard",
+									query: {
+										id: res.data.createKeyboard.id
+									}
+								});
+							}}
+						>
+							<FormItem {...formItemLayout} label="Add an Image">
+								<Upload
+									action="//jsonplaceholder.typicode.com/posts/"
+									listType="picture-card"
+									fileList={fileList}
+									onPreview={handlePreview}
+									onChange={handleImgChange}
 								>
-									<Upload
-										action="//jsonplaceholder.typicode.com/posts/"
-										listType="picture-card"
-										fileList={fileList}
-										onPreview={handlePreview}
-										onChange={handleImgChange}
-									>
-										{fileList.length >= 4 ? null : (
-											<UploadButton />
-										)}
-									</Upload>
-									<Modal
-										visible={previewVisible}
-										footer={null}
-										onCancel={handleCancel}
-									>
-										<img
-											alt="example"
-											style={{ width: "100%" }}
-											src={previewImage}
-										/>
-									</Modal>
-								</FormItem>
-								<FormItem {...formItemLayout} label="Name">
-									<Input
-										name="name"
-										value={values.name}
-										type="text"
-										onChange={handleChange}
+									{fileList.length >= 4 ? null : (
+										<UploadButton />
+									)}
+								</Upload>
+								<Modal
+									visible={previewVisible}
+									footer={null}
+									onCancel={handleCancel}
+								>
+									<img
+										alt="example"
+										style={{ width: "100%" }}
+										src={previewImage}
 									/>
-								</FormItem>
-								<FormItem {...formItemLayout} label="Switches">
-									<Input
-										name="switches"
-										value={values.switches}
-										type="text"
-										onChange={handleChange}
-									/>
-								</FormItem>
-								<FormItem {...formItemLayout} label="Size">
-									<Input
-										name="size"
-										value={values.size}
-										type="text"
-										onChange={handleChange}
-									/>
-								</FormItem>
-								<FormItem {...formItemLayout} label="Price">
-									<Input
-										name="price"
-										value={values.price}
-										type="text"
-										onChange={handleChange}
-									/>
-								</FormItem>
-								<FormItem {...formItemLayout} label="Layout">
-									<Input
-										name="layout"
-										value={values.layout}
-										type="text"
-										onChange={handleChange}
-									/>
-								</FormItem>
-								<FormItem {...formItemLayout} label="Keycaps">
-									<Input
-										name="keycaps"
-										value={values.keycaps}
-										type="text"
-										onChange={handleChange}
-									/>
-								</FormItem>
-								<FormItem {...buttonItemLayout}>
-									<Button htmlType="submit" type="primary">
-										Submit
-									</Button>
-								</FormItem>
-							</Form>
-						</fieldset>
+								</Modal>
+							</FormItem>
+							<FormItem {...formItemLayout} label="Name">
+								<Input
+									name="name"
+									value={values.name}
+									type="text"
+									onChange={handleChange}
+								/>
+							</FormItem>
+							<FormItem {...formItemLayout} label="Switches">
+								<Input
+									name="switches"
+									value={values.switches}
+									type="text"
+									onChange={handleChange}
+								/>
+							</FormItem>
+							<FormItem {...formItemLayout} label="Size">
+								<Input
+									name="size"
+									value={values.size}
+									type="text"
+									onChange={handleChange}
+								/>
+							</FormItem>
+							<FormItem {...formItemLayout} label="Price">
+								<Input
+									name="price"
+									value={values.price}
+									type="text"
+									onChange={handleChange}
+								/>
+							</FormItem>
+							<FormItem {...formItemLayout} label="Layout">
+								<Input
+									name="layout"
+									value={values.layout}
+									type="text"
+									onChange={handleChange}
+								/>
+							</FormItem>
+							<FormItem {...formItemLayout} label="Keycaps">
+								<Input
+									name="keycaps"
+									value={values.keycaps}
+									type="text"
+									onChange={handleChange}
+								/>
+							</FormItem>
+							<FormItem {...buttonItemLayout}>
+								<Button htmlType="submit" type="primary">
+									Submit
+								</Button>
+							</FormItem>
+						</Form>
 					)}
 				</Mutation>
 			)}
