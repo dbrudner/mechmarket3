@@ -11,8 +11,21 @@ type Mutation {
 		description: String!
 		keycaps: String
 	): Keyboard!
+
+	updateKeyboard(
+		id: ID!
+		name: String
+		switches: String
+		size: String
+		image: String
+		layout: String
+		price: Int
+		description: String
+		keycaps: String
+	): Keyboard!
 }
 
 type Query {
 	keyboards: [Keyboard]!
+	keyboard(where: KeyboardWhereUniqueInput!): Keyboard
 }

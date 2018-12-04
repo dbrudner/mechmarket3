@@ -12,6 +12,22 @@ const Mutations = {
 		);
 
 		return keyboard;
+	},
+
+	async updateKeyboard(parent, args, ctx, info) {
+		const { id, ...updates } = args;
+
+		return ctx.db.mutation.updateKeyboard(
+			{
+				data: {
+					...updates
+				},
+				where: {
+					id
+				}
+			},
+			info
+		);
 	}
 };
 

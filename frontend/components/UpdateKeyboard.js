@@ -20,22 +20,28 @@ export const SINGLE_KEYBOARD_QUERY = gql`
 			name
 			description
 			price
+			size
+			layout
+			keycaps
+			switches
 		}
 	}
 `;
 
 export const UPDATE_KEYBOARD_MUTATION = gql`
 	mutation UPDATE_KEYBOARD_MUTATION(
-		$name: String!
-		$switches: String!
-		$size: String!
+		$id: ID!
+		$name: String
+		$switches: String
+		$size: String
 		$image: String
 		$layout: String
-		$price: Int!
-		$description: String!
+		$price: Int
+		$description: String
 		$keycaps: String
 	) {
-		createKeyboard(
+		updateKeyboard(
+			id: $id
 			name: $name
 			switches: $switches
 			size: $size
@@ -56,59 +62,15 @@ const formItemLayout = { labelCol: { span: 4 }, wrapperCol: { span: 14 } };
 
 const buttonItemLayout = { wrapperCol: { span: 14, offset: 4 } };
 
-const UploadButton = () => (
-	<div>
-		<Icon type="plus" />
-		<div className="ant-upload-text">Upload</div>
-	</div>
-);
-
 export const UpdateKeyboard = props => {
-	const initialState = {
-		previewVisible: false,
-		previewImage: "",
-		fileList: [],
-		preventFire: false
-	};
-
-	const [imgState, setImgState] = useState(initialState);
-	const [images, setimages] = useState([]);
-
-	const handleCancel = () =>
-		setImgState({ ...imgState, previewVisible: false });
-
-	const handlePreview = file =>
-		setImgState({
-			...imgState,
-			previewImage: file.url || file.thumbUrl,
-			previewVisible: true
+	const handleSubmit = async (values, updateKeyboardMutation) => {
+		console.log("updating");
+		console.log(values);
+		const res = await updateKeyboardMutation({
+			variables: { ...values, id: props.id }
 		});
-
-	const handleImgChange = e => {
-		setImgState({ ...imgState, fileList: e.fileList });
+		console.log("fin");
 	};
-
-	const handleImgSubmit = async img => {
-		const data = new FormData();
-		data.append("file", img);
-		data.append("upload_preset", "ykospw2o");
-
-		const res = await axios.post(
-			"https://api.cloudinary.com/v1_1/dy5ptksj0/image/upload",
-			data
-		);
-
-		const { secure_url } = res.data;
-		setimages([...images, secure_url]);
-	};
-
-	const handleSubmit = async values => {
-		await imgState.fileList.forEach(({ originFileObj }) =>
-			handleImgSubmit(originFileObj)
-		);
-	};
-
-	const { previewVisible, previewImage, fileList } = imgState;
 
 	return (
 		<Query
@@ -131,6 +93,8 @@ export const UpdateKeyboard = props => {
 				console.log(data.keyboard);
 
 				if (loading) return <p>Loading...</p>;
+				if (!data.keyboard)
+					return <p>No keyboard found for ID {props.id}</p>;
 				return (
 					<Formik
 						initialValues={{
@@ -142,58 +106,25 @@ export const UpdateKeyboard = props => {
 							description,
 							keycaps
 						}}
-						onSubmit={handleSubmit}
-						render={({ handleSubmit, handleChange, values }) => (
+						render={({ handleChange, values }) => (
 							<Mutation
 								mutation={UPDATE_KEYBOARD_MUTATION}
 								variables={{
 									...values,
 									price: parseInt(values.price),
-									image: "blah"
+									id: props.id
 								}}
 							>
-								{(createKeyboard, { loading, error }) => (
+								{(updateKeyboard, { loading, error }) => (
 									<Form
-										onSubmit={async e => {
+										onSubmit={e => {
 											e.preventDefault();
-											const res = await createKeyboard();
-											Router.push({
-												pathname: "/keyboard",
-												query: {
-													id:
-														res.data.createKeyboard
-															.id
-												}
-											});
+											handleSubmit(
+												values,
+												updateKeyboard
+											);
 										}}
 									>
-										<FormItem
-											{...formItemLayout}
-											label="Add an Image"
-										>
-											<Upload
-												action="//jsonplaceholder.typicode.com/posts/"
-												listType="picture-card"
-												fileList={fileList}
-												onPreview={handlePreview}
-												onChange={handleImgChange}
-											>
-												{fileList.length >= 4 ? null : (
-													<UploadButton />
-												)}
-											</Upload>
-											<Modal
-												visible={previewVisible}
-												footer={null}
-												onCancel={handleCancel}
-											>
-												<img
-													alt="example"
-													style={{ width: "100%" }}
-													src={previewImage}
-												/>
-											</Modal>
-										</FormItem>
 										<FormItem
 											{...formItemLayout}
 											label="Name"
