@@ -13,10 +13,9 @@ const Cover = ({ name, url, id }) => (
 					margin: "auto",
 					display: "block"
 				}}
-				src="adfasdf"
+				src="https://target.scene7.com/is/image/Target/GUEST_f91292e8-2cda-4031-85b1-dec4db1621a1?wid=488&hei=488&fmt=webp"
 				alt={name}
 				onError={e => {
-					console.log("hey");
 					e.target.src =
 						"https://target.scene7.com/is/image/Target/GUEST_f91292e8-2cda-4031-85b1-dec4db1621a1?wid=488&hei=488&fmt=webp";
 				}}
@@ -40,11 +39,14 @@ export default ({
 }) => {
 	return (
 		<Card
-			hoverable
-			style={{ width: 600 }}
+			style={{ maxWidth: 600, marginTop: "15px" }}
 			cover={<Cover name={name} url={image} id={id} />}
 		>
-			<h3 style={{ fontSize: "32px" }}>{name}</h3>
+			<h3 style={{ fontSize: "32px" }}>
+				<Link href={`/keyboard?id=${id}`}>
+					<a style={{ color: "rgba(0,0,0,.65)" }}>{name}</a>
+				</Link>
+			</h3>
 			<div>${price.toFixed(2)}</div>
 			<div style={{ margin: "15px 0" }}>
 				<Tag color="magenta">{layout}</Tag>
