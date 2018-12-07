@@ -23,6 +23,8 @@ type Mutation {
 		description: String
 		keycaps: String
 	): Keyboard!
+
+	deleteKeyboard(id: ID!): Keyboard
 }
 
 type Query {

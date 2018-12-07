@@ -1,5 +1,6 @@
-import { Card, Tag } from "antd";
+import { Card, Tag, Button } from "antd";
 import Link from "next/link";
+import DeleteKeyboard from "./DeleteKeyboard";
 
 const { Meta } = Card;
 
@@ -58,6 +59,7 @@ export default ({
 			<p>Size: {size}</p>
 			<p>Layout: {layout}</p>
 			<p>Keycaps: {keycaps}</p>
+			<DeleteKeyboard id={id} />
 		</Card>
 	);
 };
