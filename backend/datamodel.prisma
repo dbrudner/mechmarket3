@@ -5,16 +5,22 @@ type User {
 	# keyboards: [Keyboard]
 }
 
+enum Condition {
+	USED
+	NEW
+}
+
 type Keyboard {
 	id: ID! @unique
 	name: String!
 	switches: String!
 	size: String!
-	image: String
+	images: [String!]!
 	layout: String
 	price: Int!
 	description: String
 	keycaps: String
+	condition: Condition!
 	# createAt: DateTime!
 	# updatedAt: DateTime!
 	# user: User!

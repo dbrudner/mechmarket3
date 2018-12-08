@@ -27,7 +27,7 @@ const Cover = ({ name, url, id }) => (
 
 export default ({
 	keyboard: {
-		image,
+		s,
 		name,
 		switches,
 		size,
@@ -35,13 +35,15 @@ export default ({
 		price,
 		description,
 		keycaps,
-		id
+		id,
+		condition,
+		images
 	}
 }) => {
 	return (
 		<Card
 			style={{ maxWidth: 600, marginTop: "15px" }}
-			cover={<Cover name={name} url={image} id={id} />}
+			cover={<Cover name={name} url={images[0]} id={id} />}
 		>
 			<h3 style={{ fontSize: "32px" }}>
 				<Link href={`/keyboard?id=${id}`}>
@@ -52,7 +54,7 @@ export default ({
 			<div style={{ margin: "15px 0" }}>
 				<Tag color="magenta">{layout}</Tag>
 				<Tag color="geekblue">{size}</Tag>
-				<Tag color="cyan">used</Tag>
+				<Tag color="cyan">{condition || "Used"}</Tag>
 			</div>
 			<p>{description}</p>
 			<p>Switches: {switches}</p>

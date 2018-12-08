@@ -18,7 +18,7 @@ export const CREATE_KEYBOARD_MUTATION = gql`
 		$name: String!
 		$switches: String!
 		$size: String!
-		$image: String
+		$images: String
 		$layout: String
 		$price: Int!
 		$description: String!
@@ -28,7 +28,7 @@ export const CREATE_KEYBOARD_MUTATION = gql`
 			name: $name
 			switches: $switches
 			size: $size
-			image: $image
+			images: $image
 			layout: $layout
 			price: $price
 			description: $description
@@ -56,12 +56,12 @@ export default () => {
 	const initialState = {
 		previewVisible: false,
 		previewImage: "",
-		fileList: [],
-		preventFire: false
+		fileList: []
 	};
 
 	const [imgState, setImgState] = useState(initialState);
-	const [images, setimages] = useState([]);
+	const [imgUrls, setImgUrls] = useState([]);
+	const [preventFire, setPreventFire] = useState(false);
 
 	const handleCancel = () =>
 		setImgState({ ...imgState, previewVisible: false });
@@ -73,11 +73,8 @@ export default () => {
 			previewVisible: true
 		});
 
-	const handleImgChange = e => {
-		setImgState({ ...imgState, fileList: e.fileList });
-	};
-
-	const handleImgSubmit = async img => {
+	const handleImgChange = async e => {
+		const img = e.fileList[e.fileList.length - 1].originFileObj;
 		const data = new FormData();
 		data.append("file", img);
 		data.append("upload_preset", "ykospw2o");
@@ -87,17 +84,38 @@ export default () => {
 			data
 		);
 
-		const { secure_url } = res.data;
-		setimages([...images, secure_url]);
+		const { secure_url } = await res.data;
+		console.log(secure_url);
+		setImgUrls([...imgUrls, secure_url]);
+
+		const { uid, name } = img;
+
+		const newImage = { uid, name, status: "done", url: secure_url };
+
+		setImgState({ ...imgState, fileList: [...fileList, newImage] });
 	};
 
+	// const handleImgSubmit = async img => {
+	// 	const data = new FormData();
+	// 	data.append("file", img);
+	// 	data.append("upload_preset", "ykospw2o");
+
+	// 	const res = await axios.post(
+	// 		"https://api.cloudinary.com/v1_1/dy5ptksj0/image/upload",
+	// 		data
+	// 	);
+
+	// 	const { secure_url } = res.data;
+	// 	setImgUrls([...images, secure_url]);
+	// };
+
 	const handleSubmit = async values => {
-		await imgState.fileList.forEach(({ originFileObj }) =>
-			handleImgSubmit(originFileObj)
-		);
+		console.log({ ...values, imgUrls });
 	};
 
 	const { previewVisible, previewImage, fileList } = imgState;
+
+	console.log(imgState.fileList);
 
 	return (
 		<Formik
@@ -117,7 +135,7 @@ export default () => {
 					variables={{
 						...values,
 						price: parseInt(values.price),
-						image: "blah"
+						imgUrls: { set: ["blah"] }
 					}}
 				>
 					{(createKeyboard, { loading, error }) => (
@@ -135,7 +153,7 @@ export default () => {
 						>
 							<FormItem {...formItemLayout} label="Add an Image">
 								<Upload
-									action="//jsonplaceholder.typicode.com/posts/"
+									action="https://res.cloudinary.com/dy5ptksj0/image/upload/v1544292037/mechmarket/ngnb7jqf3ue8bhoaadgl.jpg"
 									listType="picture-card"
 									fileList={fileList}
 									onPreview={handlePreview}

@@ -5,23 +5,25 @@ type Mutation {
 		name: String!
 		switches: String!
 		size: String!
-		image: String
+		images: [String]!
 		layout: String
 		price: Int!
 		description: String!
 		keycaps: String
+		condition: Condition!
 	): Keyboard!
 
 	updateKeyboard(
 		id: ID!
 		name: String
+		images: [String]
 		switches: String
 		size: String
-		image: String
 		layout: String
 		price: Int
 		description: String
 		keycaps: String
+		condition: Condition!
 	): Keyboard!
 
 	deleteKeyboard(id: ID!): Keyboard
