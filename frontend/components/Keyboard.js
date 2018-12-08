@@ -1,6 +1,7 @@
 import { Card, Tag, Button } from "antd";
 import Link from "next/link";
 import DeleteKeyboard from "./DeleteKeyboard";
+import "./keyboard.css";
 
 const { Meta } = Card;
 
@@ -27,7 +28,6 @@ const Cover = ({ name, url, id }) => (
 
 export default ({
 	keyboard: {
-		s,
 		name,
 		switches,
 		size,

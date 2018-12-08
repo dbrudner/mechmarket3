@@ -29,7 +29,7 @@ export const CREATE_KEYBOARD_MUTATION = gql`
 			name: $name
 			switches: $switches
 			size: $size
-			images: { set: $images }
+			images: $images
 			layout: $layout
 			price: $price
 			description: $description
@@ -62,7 +62,7 @@ export default () => {
 	};
 
 	const [imgState, setImgState] = useState(initialState);
-	const [images, setimages] = useState([]);
+	const [images, setimages] = useState(["one image", "another image"]);
 	const [preventFire, setPreventFire] = useState(false);
 
 	const handleCancel = () =>
@@ -87,7 +87,6 @@ export default () => {
 		);
 
 		const { secure_url } = await res.data;
-		console.log(secure_url);
 		setimages([...images, secure_url]);
 
 		const { uid, name } = img;
@@ -108,14 +107,14 @@ export default () => {
 	return (
 		<Formik
 			initialValues={{
-				name: "",
-				switches: "",
-				size: "",
-				layout: "",
-				price: "",
-				description: "",
-				keycaps: "",
-				condition: ""
+				name: "Name",
+				switches: "Switches",
+				size: "size",
+				layout: "layout",
+				price: "5",
+				description: "des",
+				keycaps: "caps",
+				condition: "USED"
 			}}
 			onSubmit={handleSubmit}
 			render={({ handleSubmit, handleChange, values }) => (

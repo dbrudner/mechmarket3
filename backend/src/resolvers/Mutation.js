@@ -2,10 +2,13 @@ const Mutations = {
 	async createKeyboard(parent, args, ctx, info) {
 		// TODO: Check if they are logged in
 
+		const { images, ...keyboardData } = args;
+
 		const keyboard = await ctx.db.mutation.createKeyboard(
 			{
 				data: {
-					...args
+					...keyboardData,
+					images: { set: images }
 				}
 			},
 			info
