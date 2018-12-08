@@ -1,38 +1,40 @@
 // To do:
-// Allow multiple images to submit
-// Fix multiple images preview and state handling
 // Loading state on submit
 // Error handling
 // Validation schema
 
 import { useState } from "react";
 import { Formik } from "formik";
-import { Form, Input, Icon, Button, Upload, Modal } from "antd";
+import { Form, Input, Icon, Button, Upload, Modal, Radio } from "antd";
 import axios from "axios";
 import { Mutation } from "react-apollo";
 import gql from "graphql-tag";
 import Router from "next/router";
+
+const RadioGroup = Radio.Group;
 
 export const CREATE_KEYBOARD_MUTATION = gql`
 	mutation CREATE_KEYBOARD_MUTATION(
 		$name: String!
 		$switches: String!
 		$size: String!
-		$images: String
+		$images: [String!]!
 		$layout: String
 		$price: Int!
 		$description: String!
 		$keycaps: String
+		$condition: Condition!
 	) {
 		createKeyboard(
 			name: $name
 			switches: $switches
 			size: $size
-			images: $image
+			images: { set: $images }
 			layout: $layout
 			price: $price
 			description: $description
 			keycaps: $keycaps
+			condition: $condition
 		) {
 			id
 		}
@@ -60,7 +62,7 @@ export default () => {
 	};
 
 	const [imgState, setImgState] = useState(initialState);
-	const [imgUrls, setImgUrls] = useState([]);
+	const [images, setimages] = useState([]);
 	const [preventFire, setPreventFire] = useState(false);
 
 	const handleCancel = () =>
@@ -86,7 +88,7 @@ export default () => {
 
 		const { secure_url } = await res.data;
 		console.log(secure_url);
-		setImgUrls([...imgUrls, secure_url]);
+		setimages([...images, secure_url]);
 
 		const { uid, name } = img;
 
@@ -95,22 +97,8 @@ export default () => {
 		setImgState({ ...imgState, fileList: [...fileList, newImage] });
 	};
 
-	// const handleImgSubmit = async img => {
-	// 	const data = new FormData();
-	// 	data.append("file", img);
-	// 	data.append("upload_preset", "ykospw2o");
-
-	// 	const res = await axios.post(
-	// 		"https://api.cloudinary.com/v1_1/dy5ptksj0/image/upload",
-	// 		data
-	// 	);
-
-	// 	const { secure_url } = res.data;
-	// 	setImgUrls([...images, secure_url]);
-	// };
-
 	const handleSubmit = async values => {
-		console.log({ ...values, imgUrls });
+		console.log({ ...values, images });
 	};
 
 	const { previewVisible, previewImage, fileList } = imgState;
@@ -126,7 +114,8 @@ export default () => {
 				layout: "",
 				price: "",
 				description: "",
-				keycaps: ""
+				keycaps: "",
+				condition: ""
 			}}
 			onSubmit={handleSubmit}
 			render={({ handleSubmit, handleChange, values }) => (
@@ -135,13 +124,14 @@ export default () => {
 					variables={{
 						...values,
 						price: parseInt(values.price),
-						imgUrls: { set: ["blah"] }
+						images
 					}}
 				>
 					{(createKeyboard, { loading, error }) => (
 						<Form
 							onSubmit={async e => {
 								e.preventDefault();
+								console.log(values);
 								const res = await createKeyboard();
 								Router.push({
 									pathname: "/keyboard",
@@ -153,7 +143,7 @@ export default () => {
 						>
 							<FormItem {...formItemLayout} label="Add an Image">
 								<Upload
-									action="https://res.cloudinary.com/dy5ptksj0/image/upload/v1544292037/mechmarket/ngnb7jqf3ue8bhoaadgl.jpg"
+									action={null}
 									listType="picture-card"
 									fileList={fileList}
 									onPreview={handlePreview}
@@ -174,6 +164,15 @@ export default () => {
 										src={previewImage}
 									/>
 								</Modal>
+							</FormItem>
+							<FormItem {...formItemLayout} label="Condition">
+								<RadioGroup
+									name="condition"
+									onChange={handleChange}
+								>
+									<Radio value="NEW">New</Radio>
+									<Radio value="USED">Used</Radio>
+								</RadioGroup>
 							</FormItem>
 							<FormItem {...formItemLayout} label="Name">
 								<Input
