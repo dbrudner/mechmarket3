@@ -3,6 +3,26 @@ import Link from "next/link";
 import DeleteKeyboard from "./DeleteKeyboard";
 import "./keyboard.css";
 
+interface Keyboard {
+	name: string;
+	switches: string;
+	size: string;
+	layout: string;
+	description: string;
+	keycaps: string;
+	id: string;
+	condition: string;
+	images: string[];
+}
+
+export interface KeyboardInput extends Keyboard {
+	price: string;
+}
+
+export interface KeyboardValues extends Keyboard {
+	price: number;
+}
+
 const { Meta } = Card;
 
 const Cover = ({ name, url, id }) => (
@@ -17,7 +37,7 @@ const Cover = ({ name, url, id }) => (
 				}}
 				src="https://target.scene7.com/is/image/Target/GUEST_f91292e8-2cda-4031-85b1-dec4db1621a1?wid=488&hei=488&fmt=webp"
 				alt={name}
-				onError={e => {
+				onError={(e: any) => {
 					e.target.src =
 						"https://target.scene7.com/is/image/Target/GUEST_f91292e8-2cda-4031-85b1-dec4db1621a1?wid=488&hei=488&fmt=webp";
 				}}

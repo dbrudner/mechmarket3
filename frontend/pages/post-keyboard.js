@@ -5,21 +5,45 @@
 
 import { useState } from "react";
 import { Formik } from "formik";
-import { Form, Input, Icon, Button, Upload, Modal, Radio } from "antd";
+import { Form, Input, Icon, Button, Upload, Modal, Radio, Select } from "antd";
 import axios from "axios";
 import { Mutation } from "react-apollo";
 import gql from "graphql-tag";
 import Router from "next/router";
 
 const RadioGroup = Radio.Group;
+const { Option } = Select;
+
+const sizeOptions = [
+	{
+		name: "40%",
+		value: "FORTY_PERCENT"
+	},
+	{
+		name: "60%",
+		value: "SIXTY_PERCENT"
+	},
+	{
+		name: "75%",
+		value: "SEVENTY_FIVE_PERCENT"
+	},
+	{
+		name: "TKL",
+		value: "TKL"
+	},
+	{
+		name: "Full size",
+		value: "FULL_SIZE"
+	}
+];
 
 export const CREATE_KEYBOARD_MUTATION = gql`
 	mutation CREATE_KEYBOARD_MUTATION(
 		$name: String!
 		$switches: String!
-		$size: String!
+		$size: Size!
 		$images: [String!]!
-		$layout: String
+		$layout: Layout
 		$price: Int!
 		$description: String!
 		$keycaps: String
@@ -62,8 +86,7 @@ export default () => {
 	};
 
 	const [imgState, setImgState] = useState(initialState);
-	const [images, setimages] = useState(["one image", "another image"]);
-	const [preventFire, setPreventFire] = useState(false);
+	const [images, setimages] = useState([]);
 
 	const handleCancel = () =>
 		setImgState({ ...imgState, previewVisible: false });
@@ -96,28 +119,21 @@ export default () => {
 		setImgState({ ...imgState, fileList: [...fileList, newImage] });
 	};
 
-	const handleSubmit = async values => {
-		console.log({ ...values, images });
-	};
-
 	const { previewVisible, previewImage, fileList } = imgState;
-
-	console.log(imgState.fileList);
 
 	return (
 		<Formik
 			initialValues={{
-				name: "Name",
-				switches: "Switches",
-				size: "size",
-				layout: "layout",
-				price: "5",
-				description: "des",
-				keycaps: "caps",
-				condition: "USED"
+				name: "",
+				switches: "",
+				size: "",
+				layout: "",
+				price: "",
+				description: "",
+				keycaps: "",
+				condition: ""
 			}}
-			onSubmit={handleSubmit}
-			render={({ handleSubmit, handleChange, values }) => (
+			render={({ handleChange, values, setFieldValue }) => (
 				<Mutation
 					mutation={CREATE_KEYBOARD_MUTATION}
 					variables={{
@@ -130,7 +146,6 @@ export default () => {
 						<Form
 							onSubmit={async e => {
 								e.preventDefault();
-								console.log(values);
 								const res = await createKeyboard();
 								Router.push({
 									pathname: "/keyboard",
@@ -190,12 +205,16 @@ export default () => {
 								/>
 							</FormItem>
 							<FormItem {...formItemLayout} label="Size">
-								<Input
+								<Select
+									onChange={size =>
+										setFieldValue("size", size)
+									}
 									name="size"
-									value={values.size}
-									type="text"
-									onChange={handleChange}
-								/>
+								>
+									{sizeOptions.map(({ value, name }) => (
+										<Option value={value}>{name}</Option>
+									))}
+								</Select>
 							</FormItem>
 							<FormItem {...formItemLayout} label="Price">
 								<Input
@@ -206,12 +225,13 @@ export default () => {
 								/>
 							</FormItem>
 							<FormItem {...formItemLayout} label="Layout">
-								<Input
-									name="layout"
-									value={values.layout}
-									type="text"
+								<RadioGroup
 									onChange={handleChange}
-								/>
+									name="layout"
+								>
+									<Radio value="ISO">ISO</Radio>
+									<Radio value="ANSI">ANSI</Radio>
+								</RadioGroup>
 							</FormItem>
 							<FormItem {...formItemLayout} label="Keycaps">
 								<Input
