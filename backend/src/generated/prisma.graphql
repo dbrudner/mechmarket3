@@ -1,5 +1,5 @@
 # source: https://us1.prisma.sh/dave-brudner/mechmarket/dev
-# timestamp: Sat Dec 08 2018 11:07:12 GMT-0600 (Central Standard Time)
+# timestamp: Sun Dec 16 2018 12:37:02 GMT-0600 (Central Standard Time)
 
 type AggregateKeyboard {
   count: Int!
@@ -23,9 +23,9 @@ type Keyboard implements Node {
   id: ID!
   name: String!
   switches: String!
-  size: String!
+  size: Size
   images: [String!]!
-  layout: String
+  layout: Layout
   price: Int!
   description: String
   keycaps: String
@@ -49,8 +49,8 @@ input KeyboardCreateimagesInput {
 input KeyboardCreateInput {
   name: String!
   switches: String!
-  size: String!
-  layout: String
+  size: Size
+  layout: Layout
   price: Int!
   description: String
   keycaps: String
@@ -96,9 +96,9 @@ type KeyboardPreviousValues {
   id: ID!
   name: String!
   switches: String!
-  size: String!
+  size: Size
   images: [String!]!
-  layout: String
+  layout: Layout
   price: Int!
   description: String
   keycaps: String
@@ -151,8 +151,8 @@ input KeyboardUpdateimagesInput {
 input KeyboardUpdateInput {
   name: String
   switches: String
-  size: String
-  layout: String
+  size: Size
+  layout: Layout
   price: Int
   description: String
   keycaps: String
@@ -163,8 +163,8 @@ input KeyboardUpdateInput {
 input KeyboardUpdateManyMutationInput {
   name: String
   switches: String
-  size: String
-  layout: String
+  size: Size
+  layout: Layout
   price: Int
   description: String
   keycaps: String
@@ -301,86 +301,26 @@ input KeyboardWhereInput {
 
   """All values not ending with the given string."""
   switches_not_ends_with: String
-  size: String
+  size: Size
 
   """All values that are not equal to given value."""
-  size_not: String
+  size_not: Size
 
   """All values that are contained in given list."""
-  size_in: [String!]
+  size_in: [Size!]
 
   """All values that are not contained in given list."""
-  size_not_in: [String!]
-
-  """All values less than the given value."""
-  size_lt: String
-
-  """All values less than or equal the given value."""
-  size_lte: String
-
-  """All values greater than the given value."""
-  size_gt: String
-
-  """All values greater than or equal the given value."""
-  size_gte: String
-
-  """All values containing the given string."""
-  size_contains: String
-
-  """All values not containing the given string."""
-  size_not_contains: String
-
-  """All values starting with the given string."""
-  size_starts_with: String
-
-  """All values not starting with the given string."""
-  size_not_starts_with: String
-
-  """All values ending with the given string."""
-  size_ends_with: String
-
-  """All values not ending with the given string."""
-  size_not_ends_with: String
-  layout: String
+  size_not_in: [Size!]
+  layout: Layout
 
   """All values that are not equal to given value."""
-  layout_not: String
+  layout_not: Layout
 
   """All values that are contained in given list."""
-  layout_in: [String!]
+  layout_in: [Layout!]
 
   """All values that are not contained in given list."""
-  layout_not_in: [String!]
-
-  """All values less than the given value."""
-  layout_lt: String
-
-  """All values less than or equal the given value."""
-  layout_lte: String
-
-  """All values greater than the given value."""
-  layout_gt: String
-
-  """All values greater than or equal the given value."""
-  layout_gte: String
-
-  """All values containing the given string."""
-  layout_contains: String
-
-  """All values not containing the given string."""
-  layout_not_contains: String
-
-  """All values starting with the given string."""
-  layout_starts_with: String
-
-  """All values not starting with the given string."""
-  layout_not_starts_with: String
-
-  """All values ending with the given string."""
-  layout_ends_with: String
-
-  """All values not ending with the given string."""
-  layout_not_ends_with: String
+  layout_not_in: [Layout!]
   price: Int
 
   """All values that are not equal to given value."""
@@ -499,6 +439,11 @@ input KeyboardWhereUniqueInput {
   id: ID
 }
 
+enum Layout {
+  ANSI
+  ISO
+}
+
 """
 The `Long` scalar type represents non-fractional signed whole numeric values.
 Long can represent values between -(2^63) and 2^63 - 1.
@@ -547,6 +492,15 @@ type PageInfo {
   endCursor: String
 }
 
+enum Permission {
+  ADMIN
+  USER
+  ITEMCREATE
+  ITEMUPDATE
+  ITEMDELETE
+  PERMISSIONUPDATE
+}
+
 type Query {
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   keyboards(where: KeyboardWhereInput, orderBy: KeyboardOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Keyboard]!
@@ -562,6 +516,14 @@ type Query {
   ): Node
 }
 
+enum Size {
+  FORTY_PERCENT
+  SIXTY_PERCENT
+  SEVENTY_FIVE_PERCENT
+  TKL
+  FULL_SIZE
+}
+
 type Subscription {
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
   keyboard(where: KeyboardSubscriptionWhereInput): KeyboardSubscriptionPayload
@@ -571,6 +533,10 @@ type User implements Node {
   id: ID!
   name: String!
   email: String!
+  password: String!
+  resetToken: String
+  resetTokenExpiry: Float
+  permissions: [Permission!]!
 }
 
 """A connection to a list of items."""
@@ -586,6 +552,14 @@ type UserConnection {
 input UserCreateInput {
   name: String!
   email: String!
+  password: String!
+  resetToken: String
+  resetTokenExpiry: Float
+  permissions: UserCreatepermissionsInput
+}
+
+input UserCreatepermissionsInput {
+  set: [Permission!]
 }
 
 """An edge in a connection."""
@@ -604,6 +578,12 @@ enum UserOrderByInput {
   name_DESC
   email_ASC
   email_DESC
+  password_ASC
+  password_DESC
+  resetToken_ASC
+  resetToken_DESC
+  resetTokenExpiry_ASC
+  resetTokenExpiry_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -614,6 +594,10 @@ type UserPreviousValues {
   id: ID!
   name: String!
   email: String!
+  password: String!
+  resetToken: String
+  resetTokenExpiry: Float
+  permissions: [Permission!]!
 }
 
 type UserSubscriptionPayload {
@@ -658,11 +642,23 @@ input UserSubscriptionWhereInput {
 input UserUpdateInput {
   name: String
   email: String
+  password: String
+  resetToken: String
+  resetTokenExpiry: Float
+  permissions: UserUpdatepermissionsInput
 }
 
 input UserUpdateManyMutationInput {
   name: String
   email: String
+  password: String
+  resetToken: String
+  resetTokenExpiry: Float
+  permissions: UserUpdatepermissionsInput
+}
+
+input UserUpdatepermissionsInput {
+  set: [Permission!]
 }
 
 input UserWhereInput {
@@ -794,8 +790,111 @@ input UserWhereInput {
 
   """All values not ending with the given string."""
   email_not_ends_with: String
+  password: String
+
+  """All values that are not equal to given value."""
+  password_not: String
+
+  """All values that are contained in given list."""
+  password_in: [String!]
+
+  """All values that are not contained in given list."""
+  password_not_in: [String!]
+
+  """All values less than the given value."""
+  password_lt: String
+
+  """All values less than or equal the given value."""
+  password_lte: String
+
+  """All values greater than the given value."""
+  password_gt: String
+
+  """All values greater than or equal the given value."""
+  password_gte: String
+
+  """All values containing the given string."""
+  password_contains: String
+
+  """All values not containing the given string."""
+  password_not_contains: String
+
+  """All values starting with the given string."""
+  password_starts_with: String
+
+  """All values not starting with the given string."""
+  password_not_starts_with: String
+
+  """All values ending with the given string."""
+  password_ends_with: String
+
+  """All values not ending with the given string."""
+  password_not_ends_with: String
+  resetToken: String
+
+  """All values that are not equal to given value."""
+  resetToken_not: String
+
+  """All values that are contained in given list."""
+  resetToken_in: [String!]
+
+  """All values that are not contained in given list."""
+  resetToken_not_in: [String!]
+
+  """All values less than the given value."""
+  resetToken_lt: String
+
+  """All values less than or equal the given value."""
+  resetToken_lte: String
+
+  """All values greater than the given value."""
+  resetToken_gt: String
+
+  """All values greater than or equal the given value."""
+  resetToken_gte: String
+
+  """All values containing the given string."""
+  resetToken_contains: String
+
+  """All values not containing the given string."""
+  resetToken_not_contains: String
+
+  """All values starting with the given string."""
+  resetToken_starts_with: String
+
+  """All values not starting with the given string."""
+  resetToken_not_starts_with: String
+
+  """All values ending with the given string."""
+  resetToken_ends_with: String
+
+  """All values not ending with the given string."""
+  resetToken_not_ends_with: String
+  resetTokenExpiry: Float
+
+  """All values that are not equal to given value."""
+  resetTokenExpiry_not: Float
+
+  """All values that are contained in given list."""
+  resetTokenExpiry_in: [Float!]
+
+  """All values that are not contained in given list."""
+  resetTokenExpiry_not_in: [Float!]
+
+  """All values less than the given value."""
+  resetTokenExpiry_lt: Float
+
+  """All values less than or equal the given value."""
+  resetTokenExpiry_lte: Float
+
+  """All values greater than the given value."""
+  resetTokenExpiry_gt: Float
+
+  """All values greater than or equal the given value."""
+  resetTokenExpiry_gte: Float
 }
 
 input UserWhereUniqueInput {
   id: ID
+  email: String
 }

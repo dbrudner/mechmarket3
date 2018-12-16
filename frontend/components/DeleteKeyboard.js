@@ -23,7 +23,6 @@ const DeleteKeyboard = ({ id }) => {
 								"Are you sure you want to delete this keyboard?"
 							)
 						) {
-							console.log(id);
 							deleteKeyboard();
 						}
 					}}

@@ -1,12 +1,25 @@
 # import * from './generated/prisma.graphql'
 
+enum Layout {
+	ANSI
+	ISO
+}
+
+enum Size {
+	FORTY_PERCENT
+	SIXTY_PERCENT
+	SEVENTY_FIVE_PERCENT
+	TKL
+	FULL_SIZE
+}
+
 type Mutation {
 	createKeyboard(
 		name: String!
 		switches: String!
-		size: String!
+		size: Size
 		images: [String]!
-		layout: String
+		layout: Layout
 		price: Int!
 		description: String!
 		keycaps: String
@@ -18,18 +31,26 @@ type Mutation {
 		name: String
 		images: [String]
 		switches: String
-		size: String
-		layout: String
+		size: Size
+		layout: Layout
 		price: Int
 		description: String
 		keycaps: String
-		condition: Condition!
+		condition: Condition
 	): Keyboard!
 
 	deleteKeyboard(id: ID!): Keyboard
+
+	signup(email: String!, password: String!, name: String!): User!
 }
 
 type Query {
-	keyboards: [Keyboard]!
+	keyboards(
+		where: KeyboardWhereInput
+		orderBy: KeyboardOrderByInput
+		skip: Int
+		first: Int
+	): [Keyboard]!
 	keyboard(where: KeyboardWhereUniqueInput!): Keyboard
+	keyboardsConnection(where: KeyboardWhereInput): KeyboardConnection!
 }
