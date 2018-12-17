@@ -8,13 +8,9 @@ import { CURRENT_USER_QUERY } from "../components/User";
 
 const FormItem = Form.Item;
 
-const SIGNUP_MUTATION = gql`
-	mutation SIGNUP_MUTATION(
-		$email: String!
-		$name: String!
-		$password: String!
-	) {
-		signup(email: $email, name: $name, password: $password) {
+const SIGNIN_MUTATION = gql`
+	mutation SIGNIN_MUTATION($email: String!, $password: String!) {
+		signin(email: $email, password: $password) {
 			id
 			email
 			name
@@ -24,40 +20,39 @@ const SIGNUP_MUTATION = gql`
 
 export default () => (
 	<div>
-		<h2>Sign up</h2>
+		<h2>Sign in</h2>
 		<Formik
 			initialValues={{
-				name: "",
 				email: "",
 				password: ""
 			}}
 			render={({ values, handleChange, handleSubmit }) => (
 				<Mutation
 					refetchQueries={[{ query: CURRENT_USER_QUERY }]}
-					mutation={SIGNUP_MUTATION}
+					mutation={SIGNIN_MUTATION}
 					variables={values}
 				>
-					{(signup, { loading, error }) => (
+					{(signin, { loading, error }) => (
 						<Form
 							method="post"
 							onSubmit={async e => {
 								e.preventDefault();
-								await signup();
+								await signin();
 							}}
 						>
 							<fieldset disabled={loading} aria-busy={loading}>
-								<FormItem {...formItemLayout} label="Username">
+								<FormItem {...formItemLayout} label="E-mail">
 									<Input
-										name="name"
 										prefix={
 											<Icon
-												type="user"
+												type="mail"
 												style={{
 													color: "rgba(0,0,0,.25)"
 												}}
 											/>
 										}
-										value={values.name}
+										name="email"
+										value={values.email}
 										type="text"
 										onChange={handleChange}
 									/>
@@ -78,29 +73,13 @@ export default () => (
 										onChange={handleChange}
 									/>
 								</FormItem>
-								<FormItem {...formItemLayout} label="E-mail">
-									<Input
-										prefix={
-											<Icon
-												type="mail"
-												style={{
-													color: "rgba(0,0,0,.25)"
-												}}
-											/>
-										}
-										name="email"
-										value={values.email}
-										type="text"
-										onChange={handleChange}
-									/>
-								</FormItem>
 								<FormItem {...buttonItemLayout}>
 									<Button type="primary" htmlType="submit">
-										Sign up
+										Sign in
 									</Button>
-									<Link href="/signin">
+									<Link href="/signup">
 										<a style={{ marginLeft: "15px" }}>
-											Sign in
+											Sign up
 										</a>
 									</Link>
 								</FormItem>

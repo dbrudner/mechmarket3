@@ -3,12 +3,20 @@ const { forwardTo } = require("prisma-binding");
 const Query = {
 	keyboards: forwardTo("db"),
 	keyboard: forwardTo("db"),
-	keyboardsConnection: forwardTo("db")
-	// async items(parent, args, ctx, info) {
-	//   console.log('Getting Items!!');
-	//   const items = await ctx.db.query.items();
-	//   return items;
-	// },
+	keyboardsConnection: forwardTo("db"),
+	me(parent, args, ctx, info) {
+		if (!ctx.request.userId) {
+			return null;
+		}
+		return ctx.db.query.user(
+			{
+				where: {
+					id: ctx.request.userId
+				}
+			},
+			info
+		);
+	}
 };
 
 module.exports = Query;

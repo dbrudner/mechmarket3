@@ -20,6 +20,7 @@ export default ({ page }) => (
 				if (loading) {
 					return loading;
 				}
+
 				const count = data.keyboardsConnection.aggregate.count;
 				const pages = Math.ceil(count / perPage);
 
