@@ -1,4 +1,5 @@
 import { User } from "./User";
+import { Signout } from "./";
 
 export default () => (
 	<div>
@@ -9,5 +10,6 @@ export default () => (
 				return <p>hey {data.me.name}</p>;
 			}}
 		</User>
+		<Signout />
 	</div>
 );

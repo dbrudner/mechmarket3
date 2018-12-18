@@ -13,6 +13,10 @@ enum Size {
 	FULL_SIZE
 }
 
+type SuccessMessage {
+	message: String
+}
+
 type Mutation {
 	createKeyboard(
 		name: String!
@@ -43,6 +47,7 @@ type Mutation {
 
 	signup(email: String!, password: String!, name: String!): User!
 	signin(email: String!, password: String!): User!
+	signout: SuccessMessage!
 }
 
 type Query {
