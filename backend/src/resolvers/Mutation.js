@@ -2,10 +2,15 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { randomBytes } = require("crypto");
 const { promisify } = require("util");
+const { transport, email } = require("../mail");
 
 const Mutations = {
 	async createKeyboard(parent, args, ctx, info) {
 		// TODO: Check if they are logged in
+
+		if (ctx.request.userId) {
+			throw new Error("You must be logged in to post a keyboard");
+		}
 
 		const { images, ...keyboardData } = args;
 
@@ -117,8 +122,16 @@ const Mutations = {
 			}
 		});
 
-		console.log(res);
-		// '90ebd7ee86f05e91f874ebc614225bb1e840eb7d'
+		const mailRes = await transport.sendMail({
+			from: "d.b.io",
+			to: user.email,
+			subject: "Password reset",
+			html: email(
+				`Reset password: <a href="${
+					process.env.FRONTEND_URL
+				}/reset?resetToken=${resetToken}"`
+			)
+		});
 
 		return { message: "getting new password" };
 	},

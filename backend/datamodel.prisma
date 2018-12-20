@@ -47,7 +47,5 @@ type Keyboard {
 	description: String
 	keycaps: String
 	condition: Condition!
-	# createdAt: DateTime!
-	# updatedAt: DateTime!
-	# user: User!
+	user: User!
 }

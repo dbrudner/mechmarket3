@@ -1,5 +1,5 @@
 # source: https://us1.prisma.sh/dave-brudner/mechmarket/dev
-# timestamp: Sun Dec 16 2018 12:37:02 GMT-0600 (Central Standard Time)
+# timestamp: Wed Dec 19 2018 17:49:07 GMT-0600 (Central Standard Time)
 
 type AggregateKeyboard {
   count: Int!
@@ -30,6 +30,7 @@ type Keyboard implements Node {
   description: String
   keycaps: String
   condition: Condition!
+  user: User!
 }
 
 """A connection to a list of items."""
@@ -56,6 +57,7 @@ input KeyboardCreateInput {
   keycaps: String
   condition: Condition!
   images: KeyboardCreateimagesInput
+  user: UserCreateOneInput!
 }
 
 """An edge in a connection."""
@@ -158,6 +160,7 @@ input KeyboardUpdateInput {
   keycaps: String
   condition: Condition
   images: KeyboardUpdateimagesInput
+  user: UserUpdateOneRequiredInput
 }
 
 input KeyboardUpdateManyMutationInput {
@@ -433,6 +436,7 @@ input KeyboardWhereInput {
 
   """All values that are not contained in given list."""
   condition_not_in: [Condition!]
+  user: UserWhereInput
 }
 
 input KeyboardWhereUniqueInput {
@@ -451,18 +455,18 @@ Long can represent values between -(2^63) and 2^63 - 1.
 scalar Long
 
 type Mutation {
-  createUser(data: UserCreateInput!): User!
   createKeyboard(data: KeyboardCreateInput!): Keyboard!
-  updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
+  createUser(data: UserCreateInput!): User!
   updateKeyboard(data: KeyboardUpdateInput!, where: KeyboardWhereUniqueInput!): Keyboard
-  deleteUser(where: UserWhereUniqueInput!): User
+  updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   deleteKeyboard(where: KeyboardWhereUniqueInput!): Keyboard
-  upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
+  deleteUser(where: UserWhereUniqueInput!): User
   upsertKeyboard(where: KeyboardWhereUniqueInput!, create: KeyboardCreateInput!, update: KeyboardUpdateInput!): Keyboard!
-  updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
+  upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   updateManyKeyboards(data: KeyboardUpdateManyMutationInput!, where: KeyboardWhereInput): BatchPayload!
-  deleteManyUsers(where: UserWhereInput): BatchPayload!
+  updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
   deleteManyKeyboards(where: KeyboardWhereInput): BatchPayload!
+  deleteManyUsers(where: UserWhereInput): BatchPayload!
 }
 
 enum MutationType {
@@ -502,12 +506,12 @@ enum Permission {
 }
 
 type Query {
-  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   keyboards(where: KeyboardWhereInput, orderBy: KeyboardOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Keyboard]!
-  user(where: UserWhereUniqueInput!): User
+  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   keyboard(where: KeyboardWhereUniqueInput!): Keyboard
-  usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
+  user(where: UserWhereUniqueInput!): User
   keyboardsConnection(where: KeyboardWhereInput, orderBy: KeyboardOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): KeyboardConnection!
+  usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
 
   """Fetches an object given its ID"""
   node(
@@ -525,8 +529,8 @@ enum Size {
 }
 
 type Subscription {
-  user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
   keyboard(where: KeyboardSubscriptionWhereInput): KeyboardSubscriptionPayload
+  user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
 }
 
 type User implements Node {
@@ -556,6 +560,11 @@ input UserCreateInput {
   resetToken: String
   resetTokenExpiry: Float
   permissions: UserCreatepermissionsInput
+}
+
+input UserCreateOneInput {
+  create: UserCreateInput
+  connect: UserWhereUniqueInput
 }
 
 input UserCreatepermissionsInput {
@@ -639,6 +648,15 @@ input UserSubscriptionWhereInput {
   node: UserWhereInput
 }
 
+input UserUpdateDataInput {
+  name: String
+  email: String
+  password: String
+  resetToken: String
+  resetTokenExpiry: Float
+  permissions: UserUpdatepermissionsInput
+}
+
 input UserUpdateInput {
   name: String
   email: String
@@ -657,8 +675,20 @@ input UserUpdateManyMutationInput {
   permissions: UserUpdatepermissionsInput
 }
 
+input UserUpdateOneRequiredInput {
+  create: UserCreateInput
+  connect: UserWhereUniqueInput
+  update: UserUpdateDataInput
+  upsert: UserUpsertNestedInput
+}
+
 input UserUpdatepermissionsInput {
   set: [Permission!]
+}
+
+input UserUpsertNestedInput {
+  update: UserUpdateDataInput!
+  create: UserCreateInput!
 }
 
 input UserWhereInput {
